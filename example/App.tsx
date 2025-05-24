@@ -7,7 +7,7 @@ function App() {
       <ChatBox
         user={{ userId: "test", token: "test-token" }}
         wsUrl="wss://test"
-        theme="dark"
+        theme="light"
       />
     </div>
   );

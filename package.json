@@ -4,7 +4,8 @@
   "description": "一个基于 React 的轻量级 AI 聊天框架，支持 React 组件方式和 iframe 嵌入两种集成方式，便于快速接入各种已有 Web 系统，实现与后端大模型服务的实时通信。",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:example": "vite --config example/vite.config.ts"
   },
   "keywords": [],
   "author": "arkin-dev",
