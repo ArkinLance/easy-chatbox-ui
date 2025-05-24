@@ -1,0 +1,24 @@
+{
+  "name": "@arkin-dev/easy-chatbox-ui",
+  "version": "1.0.0",
+  "description": "一个基于 React 的轻量级 AI 聊天框架，支持 React 组件方式和 iframe 嵌入两种集成方式，便于快速接入各种已有 Web 系统，实现与后端大模型服务的实时通信。",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "arkin-dev",
+  "license": "ISC",
+  "packageManager": "pnpm@10.7.0",
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.5",
+    "@types/react-dom": "^19.1.5",
+    "@vitejs/plugin-react": "^4.5.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
+  }
+}

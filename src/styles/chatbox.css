@@ -1,0 +1,198 @@
+.chatbox-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  max-width: 100vw;
+  height: 100vh;
+  background: #fff;
+  box-shadow: -2px 0 8px rgba(0,0,0,0.08);
+  display: flex;
+  z-index: 9999;
+  transition: width 0.3s;
+}
+.chatbox-container.fullscreen {
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+}
+.chatbox-sidebar {
+  width: 80px;
+  min-width: 60px;
+  background: #f5f5f7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 0;
+  border-right: 1px solid #eee;
+  justify-content: space-between;
+}
+.chatbox-sidebar-panels {
+  flex: 1;
+  width: 100%;
+}
+.chatbox-sidebar-item {
+  width: 100%;
+  padding: 12px 0;
+  text-align: center;
+  cursor: pointer;
+  color: #888;
+  font-size: 14px;
+  transition: background 0.2s, color 0.2s;
+}
+.chatbox-sidebar-item.active {
+  background: #e6f0ff;
+  color: #1677ff;
+  font-weight: bold;
+}
+.chatbox-sidebar-bottom {
+  margin-top: 16px;
+}
+.chatbox-fullscreen-btn {
+  padding: 6px 12px;
+  border: none;
+  background: #1677ff;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.chatbox-main-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  overflow-y: auto;
+  min-width: 0;
+}
+.chatbox-chat-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.chatbox-messages {
+  flex: 1;
+  overflow-y: auto;
+  background: #fafafa;
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  min-height: 120px;
+}
+.chatbox-message {
+  margin-bottom: 6px;
+  padding: 6px 10px;
+  background: #e6f0ff;
+  border-radius: 4px;
+  color: #333;
+  max-width: 80%;
+  word-break: break-all;
+}
+.chatbox-input {
+  display: flex;
+  gap: 8px;
+}
+.chatbox-input input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+}
+.chatbox-input button {
+  padding: 8px 16px;
+  background: #1677ff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* 移动端适配 */
+@media (max-width: 600px) {
+  .chatbox-container,
+  .chatbox-container.fullscreen {
+    width: 100vw;
+    left: 0;
+    right: 0;
+    border-radius: 0;
+  }
+  .chatbox-main-panel {
+    padding: 8px;
+  }
+}
+
+/* 主题：深色模式 */
+.chatbox-theme-dark {
+  background: #18191c !important;
+  color: #f1f1f1 !important;
+}
+.chatbox-theme-dark .chatbox-sidebar {
+  background: #232326;
+  border-right: 1px solid #222;
+}
+.chatbox-theme-dark .chatbox-sidebar-item {
+  color: #aaa;
+}
+.chatbox-theme-dark .chatbox-sidebar-item.active {
+  background: #222c3a;
+  color: #4ea1ff;
+}
+.chatbox-theme-dark .chatbox-main-panel {
+  background: #18191c;
+  color: #f1f1f1;
+}
+.chatbox-theme-dark .chatbox-messages {
+  background: #232326;
+}
+.chatbox-theme-dark .chatbox-message {
+  background: #22334a;
+  color: #e6f7ff;
+}
+.chatbox-theme-dark .chatbox-input input {
+  background: #232326;
+  color: #f1f1f1;
+  border: 1px solid #333;
+}
+.chatbox-theme-dark .chatbox-input button,
+.chatbox-theme-dark .chatbox-fullscreen-btn {
+  background: #4ea1ff;
+  color: #fff;
+}
+
+/* 主题：浅色模式（可选，默认已是浅色） */
+.chatbox-theme-light {
+  background: #fff !important;
+  color: #222 !important;
+}
+.chatbox-theme-light .chatbox-sidebar {
+  background: #f5f5f7;
+  border-right: 1px solid #eee;
+}
+.chatbox-theme-light .chatbox-sidebar-item {
+  color: #888;
+}
+.chatbox-theme-light .chatbox-sidebar-item.active {
+  background: #e6f0ff;
+  color: #1677ff;
+}
+.chatbox-theme-light .chatbox-main-panel {
+  background: #fff;
+  color: #222;
+}
+.chatbox-theme-light .chatbox-messages {
+  background: #fafafa;
+}
+.chatbox-theme-light .chatbox-message {
+  background: #e6f0ff;
+  color: #333;
+}
+.chatbox-theme-light .chatbox-input input {
+  background: #fff;
+  color: #222;
+  border: 1px solid #eee;
+}
+.chatbox-theme-light .chatbox-input button,
+.chatbox-theme-light .chatbox-fullscreen-btn {
+  background: #1677ff;
+  color: #fff;
+}
