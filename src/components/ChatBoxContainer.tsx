@@ -18,9 +18,24 @@ interface ChatBoxContainerProps {
   theme?: 'light' | 'dark' | { [key: string]: string };
 }
 
-const ChatBoxContainer: React.FC<ChatBoxContainerProps> = ({ user, wsUrl, onEvent, theme }) => {
+const getSystemTheme = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+
+const ChatBoxContainer: React.FC<ChatBoxContainerProps> = ({ user, wsUrl, onEvent, theme: themeProp }) => {
   const [activePanel, setActivePanel] = useState<PanelType>("chat");
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [themeMode, setThemeMode] = React.useState<'light' | 'dark' | 'auto'>(themeProp === 'dark' || themeProp === 'light' ? themeProp : 'auto');
+  const [theme, setTheme] = React.useState<'light' | 'dark'>(themeMode === 'auto' ? getSystemTheme() : themeMode);
+
+  React.useEffect(() => {
+    if (themeMode === 'auto') {
+      const updateTheme = () => setTheme(getSystemTheme());
+      updateTheme();
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateTheme);
+      return () => window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', updateTheme);
+    } else {
+      setTheme(themeMode);
+    }
+  }, [themeMode]);
 
   // 处理主题 className 或 style
   let themeClass = '';
@@ -33,20 +48,22 @@ const ChatBoxContainer: React.FC<ChatBoxContainerProps> = ({ user, wsUrl, onEven
 
   return (
     <div
-      className={`chatbox-container${isFullScreen ? " fullscreen" : ""} ${themeClass}`}
+      className={`chatbox-container${isFullScreen ? " fullscreen" : ""} chatbox-theme-${theme}`}
       style={themeStyle}
     >
       <SideBar
         activePanel={activePanel}
         onChange={setActivePanel}
-        onFullScreen={() => setIsFullScreen((v) => !v)}
-        isFullScreen={isFullScreen}
+        onThemeChange={setThemeMode}
+        theme={themeMode}
       />
       <MainPanel
         activePanel={activePanel}
         user={user}
         wsUrl={wsUrl}
         onEvent={onEvent}
+        onFullScreen={() => setIsFullScreen((v) => !v)}
+        isFullScreen={isFullScreen}
       />
     </div>
   );

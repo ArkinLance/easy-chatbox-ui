@@ -6,20 +6,26 @@ import ModelConfigPanel from "../panels/ModelConfigPanel";
 import ModelManagePanel from "../panels/ModelManagePanel";
 import SessionPanel from "../panels/SessionPanel";
 import { PanelType } from "./ChatBoxContainer";
+import { FiMaximize, FiMinimize } from "react-icons/fi";
 
 interface MainPanelProps {
   activePanel: PanelType;
   user: { userId: string; token: string };
   wsUrl: string;
   onEvent?: (event: any) => void;
+  onFullScreen: () => void;
+  isFullScreen: boolean;
 }
 
-const MainPanel: React.FC<MainPanelProps> = ({ activePanel, user, wsUrl, onEvent }) => {
+const MainPanel: React.FC<MainPanelProps> = ({ activePanel, user, wsUrl, onEvent, onFullScreen, isFullScreen }) => {
   return (
     <div className="chatbox-main-panel-outer">
       {/* 标题栏 */}
       <div className="chatbox-title-bar">
         <span className="chatbox-title-model">ChatBox</span>
+        <span className="chatbox-fullscreen-btn" onClick={onFullScreen} style={{marginLeft: 'auto'}}>
+          {isFullScreen ? <FiMinimize /> : <FiMaximize />}
+        </span>
       </div>
       {/* 内容区域 */}
       <div className="chatbox-main-content">
