@@ -36,9 +36,9 @@ const ChatBoxContainer: React.FC<ChatBoxContainerProps> = ({ user, wsUrl, onEven
 
   // 新增：最小化与悬浮对话框位置
   const [minimized, setMinimized] = useState(false);
-  const [position, setPosition] = useState({ top: 100, left: 100 });
-  const [width, setWidth] = useState(INIT_WIDTH);
-  const [height, setHeight] = useState(INIT_HEIGHT);
+  const [minimizedPosition, setMinimizedPosition] = useState({ top: 100, left: 100 });
+  const [panelPosition, setPanelPosition] = useState({ top: 100, left: 100 });
+  const [panelSize, setPanelSize] = useState({ width: INIT_WIDTH, height: INIT_HEIGHT });
   const dragging = useRef(false);
   const offset = useRef({ x: 0, y: 0 });
   const resizing = useRef(false);
@@ -46,6 +46,12 @@ const ChatBoxContainer: React.FC<ChatBoxContainerProps> = ({ user, wsUrl, onEven
   const dragTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const resizeTimer = useRef<number | null>(null);
   const mouseDownRef = useRef(false);
+
+  // minimized 拖动相关
+  const minimizedDragging = useRef(false);
+  const minimizedDragTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const minimizedOffset = useRef({ x: 0, y: 0 });
+  const minimizedMouseMoved = useRef(false);
 
   // 监听系统主题变化
   React.useEffect(() => {
@@ -78,8 +84,8 @@ const ChatBoxContainer: React.FC<ChatBoxContainerProps> = ({ user, wsUrl, onEven
     dragTimer.current = setTimeout(() => {
       dragging.current = true;
       offset.current = {
-        x: e.clientX - position.left,
-        y: e.clientY - position.top,
+        x: e.clientX - panelPosition.left,
+        y: e.clientY - panelPosition.top,
       };
     }, 80);
     document.addEventListener('mousemove', handleMouseMove);
@@ -88,7 +94,7 @@ const ChatBoxContainer: React.FC<ChatBoxContainerProps> = ({ user, wsUrl, onEven
   };
   const handleMouseMove = (e: MouseEvent) => {
     if (dragging.current && !isFullScreen) {
-      setPosition({
+      setPanelPosition({
         left: e.clientX - offset.current.x,
         top: e.clientY - offset.current.y,
       });
@@ -100,8 +106,7 @@ const ChatBoxContainer: React.FC<ChatBoxContainerProps> = ({ user, wsUrl, onEven
       let newHeight = resizeStart.current.height + dy;
       if (newWidth < MIN_WIDTH) newWidth = MIN_WIDTH;
       if (newHeight < MIN_HEIGHT) newHeight = MIN_HEIGHT;
-      setWidth(newWidth);
-      setHeight(newHeight);
+      setPanelSize({ width: newWidth, height: newHeight });
     }
   };
   const handleMouseUp = () => {
@@ -132,8 +137,8 @@ const ChatBoxContainer: React.FC<ChatBoxContainerProps> = ({ user, wsUrl, onEven
         resizeStart.current = {
           mouseX: e.clientX,
           mouseY: e.clientY,
-          width,
-          height,
+          width: panelSize.width,
+          height: panelSize.height,
         };
       }
     }, 80);
@@ -142,10 +147,62 @@ const ChatBoxContainer: React.FC<ChatBoxContainerProps> = ({ user, wsUrl, onEven
     document.addEventListener('mouseleave', handleMouseUp);
   };
 
-  // 悬浮气泡按钮
+  // minimized 拖动相关
+  const handleMinimizedMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    minimizedMouseMoved.current = false;
+    minimizedDragTimer.current = setTimeout(() => {
+      minimizedDragging.current = true;
+      minimizedOffset.current = {
+        x: e.clientX - minimizedPosition.left,
+        y: e.clientY - minimizedPosition.top,
+      };
+    }, 80);
+    document.addEventListener('mousemove', handleMinimizedMouseMove);
+    document.addEventListener('mouseup', handleMinimizedMouseUp);
+  };
+
+  const handleMinimizedMouseMove = (e: MouseEvent) => {
+    if (minimizedDragging.current) {
+      minimizedMouseMoved.current = true;
+      setMinimizedPosition({
+        left: e.clientX - minimizedOffset.current.x,
+        top: e.clientY - minimizedOffset.current.y,
+      });
+    }
+  };
+
+  const handleMinimizedMouseUp = (e: MouseEvent) => {
+    if (minimizedDragTimer.current) {
+      clearTimeout(minimizedDragTimer.current);
+      minimizedDragTimer.current = null;
+    }
+    document.removeEventListener('mousemove', handleMinimizedMouseMove);
+    document.removeEventListener('mouseup', handleMinimizedMouseUp);
+
+    if (minimizedDragging.current) {
+      minimizedDragging.current = false;
+      // 拖动后不展开
+      return;
+    }
+    // 没有拖动，判定为点击，展开
+    setMinimized(false);
+  };
+
+  // 悬浮气泡按钮（支持长按拖动）
   if (minimized) {
     return (
-      <div className="chatbox-float-btn" onClick={() => setMinimized(false)} title="展开对话框">
+      <div
+        className="chatbox-float-btn"
+        style={{
+          top: minimizedPosition.top,
+          left: minimizedPosition.left,
+          right: 'auto',
+          bottom: 'auto',
+          position: 'fixed',
+        }}
+        onMouseDown={handleMinimizedMouseDown}
+        title="展开对话框"
+      >
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
       </div>
     );
@@ -168,10 +225,10 @@ const ChatBoxContainer: React.FC<ChatBoxContainerProps> = ({ user, wsUrl, onEven
               ...((typeof themeStyle === 'object' && themeStyle !== null) ? themeStyle : {})
             }
           : {
-              top: position.top,
-              left: position.left,
-              width,
-              height,
+              top: panelPosition.top,
+              left: panelPosition.left,
+              width: panelSize.width,
+              height: panelSize.height,
               minWidth: MIN_WIDTH,
               minHeight: MIN_HEIGHT,
               ...((typeof themeStyle === 'object' && themeStyle !== null) ? themeStyle : {})
