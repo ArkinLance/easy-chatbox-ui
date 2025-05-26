@@ -1,6 +1,6 @@
 import React from "react";
+import { FaAdjust, FaBook, FaCog, FaCogs, FaComments, FaIdBadge, FaInfoCircle, FaMoon, FaRobot, FaServer, FaSun } from "react-icons/fa";
 import { PanelType } from "./ChatBoxContainer";
-import { FaComments, FaIdBadge, FaCogs, FaServer, FaBook, FaRobot, FaCog, FaSun, FaInfoCircle } from "react-icons/fa";
 
 interface SideBarProps {
   activePanel: PanelType;
@@ -38,7 +38,7 @@ const SideBar: React.FC<SideBarProps> = ({ activePanel, onChange, onThemeChange,
           <FaInfoCircle />
         </span>
         <span className="chatbox-sidebar-bottom-btn" title="主题" onClick={() => setShowThemeMenu(v => !v)}>
-          <FaSun />
+          {theme === 'dark' ? <FaMoon /> : theme === 'light' ? <FaSun /> : <FaAdjust />}
         </span>
         <span className="chatbox-sidebar-bottom-btn" title="设置">
           <FaCog />
